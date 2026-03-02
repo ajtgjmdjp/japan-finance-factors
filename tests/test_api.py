@@ -31,6 +31,15 @@ class TestComputeFactors:
         # Quality factors
         assert d["piotroski_f_score"] is not None
         assert d["accruals_ratio"] is not None
+        assert d["roe"] is not None
+        assert d["roa"] is not None
+        assert d["gross_margin"] is not None
+        assert d["operating_margin"] is not None
+        assert d["net_margin"] is not None
+        assert d["debt_to_equity"] is not None
+        assert d["current_ratio"] is not None
+        # Size factors
+        assert d["log_market_cap"] is not None
         # Momentum factors (depends on data length)
         assert "mom_3m" in d
         assert "mom_12m" in d
@@ -43,7 +52,7 @@ class TestComputeFactors:
             financial_data=toyota_financials,
             as_of=datetime(2025, 7, 1),
         )
-        assert len(result.observations) == 6  # 4 value + 2 quality
+        assert len(result.observations) == 14  # 4 value + 9 quality + 1 size
 
     def test_price_only(self, price_series_300d: PriceData) -> None:
         result = compute_factors(
@@ -81,6 +90,7 @@ class TestComputeFactors:
         categories = {o.factor_id: o.category for o in result.observations}
         assert categories["ev_ebitda"] == FactorCategory.VALUE
         assert categories["piotroski_f_score"] == FactorCategory.QUALITY
+        assert categories["log_market_cap"] == FactorCategory.SIZE
 
     def test_thousand_jpy_normalization(self) -> None:
         """Financial data in 千円 should be auto-normalized.

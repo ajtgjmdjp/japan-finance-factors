@@ -11,7 +11,7 @@ from japan_finance_factors._models import (
     FinancialData,
     PriceData,
 )
-from japan_finance_factors.factors import momentum, quality, risk, value
+from japan_finance_factors.factors import momentum, quality, risk, size, value
 from japan_finance_factors.pit.alignment import (
     filter_prices,
     is_available,
@@ -26,6 +26,14 @@ _FINANCIAL_FACTORS: list[tuple[str, FactorCategory, object]] = [
     ("book_to_market", FactorCategory.VALUE, value.book_to_market),
     ("piotroski_f_score", FactorCategory.QUALITY, quality.piotroski_f_score),
     ("accruals_ratio", FactorCategory.QUALITY, quality.accruals_ratio),
+    ("roe", FactorCategory.QUALITY, quality.roe),
+    ("roa", FactorCategory.QUALITY, quality.roa),
+    ("gross_margin", FactorCategory.QUALITY, quality.gross_margin),
+    ("operating_margin", FactorCategory.QUALITY, quality.operating_margin),
+    ("net_margin", FactorCategory.QUALITY, quality.net_margin),
+    ("debt_to_equity", FactorCategory.QUALITY, quality.debt_to_equity),
+    ("current_ratio", FactorCategory.QUALITY, quality.current_ratio),
+    ("log_market_cap", FactorCategory.SIZE, size.log_market_cap),
 ]
 
 _PRICE_FACTORS: list[tuple[str, FactorCategory, object]] = [

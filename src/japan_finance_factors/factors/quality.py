@@ -114,6 +114,59 @@ def piotroski_f_score(fd: FinancialData) -> float | None:
     return float(score)
 
 
+def roe(fd: FinancialData) -> float | None:
+    """Return on Equity = Net Income / Total Equity."""
+    if fd.net_income is None or fd.total_equity is None or fd.total_equity == 0:
+        return None
+    return fd.net_income / fd.total_equity
+
+
+def roa(fd: FinancialData) -> float | None:
+    """Return on Assets = Net Income / Total Assets."""
+    if fd.net_income is None or fd.total_assets is None or fd.total_assets == 0:
+        return None
+    return fd.net_income / fd.total_assets
+
+
+def gross_margin(fd: FinancialData) -> float | None:
+    """Gross Margin = Gross Profit / Revenue."""
+    if fd.gross_profit is None or fd.revenue is None or fd.revenue == 0:
+        return None
+    return fd.gross_profit / fd.revenue
+
+
+def operating_margin(fd: FinancialData) -> float | None:
+    """Operating Margin = Operating Income / Revenue."""
+    if fd.operating_income is None or fd.revenue is None or fd.revenue == 0:
+        return None
+    return fd.operating_income / fd.revenue
+
+
+def net_margin(fd: FinancialData) -> float | None:
+    """Net Margin = Net Income / Revenue."""
+    if fd.net_income is None or fd.revenue is None or fd.revenue == 0:
+        return None
+    return fd.net_income / fd.revenue
+
+
+def debt_to_equity(fd: FinancialData) -> float | None:
+    """Debt-to-Equity Ratio = Total Liabilities / Total Equity."""
+    if fd.total_liabilities is None or fd.total_equity is None or fd.total_equity == 0:
+        return None
+    return fd.total_liabilities / fd.total_equity
+
+
+def current_ratio(fd: FinancialData) -> float | None:
+    """Current Ratio = Current Assets / Current Liabilities."""
+    if (
+        fd.current_assets is None
+        or fd.current_liabilities is None
+        or fd.current_liabilities == 0
+    ):
+        return None
+    return fd.current_assets / fd.current_liabilities
+
+
 def accruals_ratio(fd: FinancialData) -> float | None:
     """Accruals ratio = (Net Income - Operating CF) / Total Assets.
 

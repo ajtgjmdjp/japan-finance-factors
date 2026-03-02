@@ -3,7 +3,17 @@
 from __future__ import annotations
 
 from japan_finance_factors._models import FinancialData
-from japan_finance_factors.factors.quality import accruals_ratio, piotroski_f_score
+from japan_finance_factors.factors.quality import (
+    accruals_ratio,
+    current_ratio,
+    debt_to_equity,
+    gross_margin,
+    net_margin,
+    operating_margin,
+    piotroski_f_score,
+    roa,
+    roe,
+)
 
 
 class TestPiotroskiFScore:
@@ -87,3 +97,106 @@ class TestAccrualsRatio:
     def test_zero_assets(self) -> None:
         fd = FinancialData(net_income=100, operating_cf=50, total_assets=0)
         assert accruals_ratio(fd) is None
+
+
+class TestROE:
+    def test_basic(self, toyota_financials: FinancialData) -> None:
+        result = roe(toyota_financials)
+        assert result is not None
+        assert 0 < result < 0.5
+
+    def test_missing_equity(self) -> None:
+        fd = FinancialData(net_income=100)
+        assert roe(fd) is None
+
+    def test_zero_equity(self) -> None:
+        fd = FinancialData(net_income=100, total_equity=0)
+        assert roe(fd) is None
+
+    def test_negative_income(self) -> None:
+        fd = FinancialData(net_income=-100, total_equity=1000)
+        result = roe(fd)
+        assert result is not None
+        assert result < 0
+
+
+class TestROA:
+    def test_basic(self, toyota_financials: FinancialData) -> None:
+        result = roa(toyota_financials)
+        assert result is not None
+        assert 0 < result < 0.2
+
+    def test_missing_assets(self) -> None:
+        fd = FinancialData(net_income=100)
+        assert roa(fd) is None
+
+
+class TestGrossMargin:
+    def test_basic(self, toyota_financials: FinancialData) -> None:
+        result = gross_margin(toyota_financials)
+        assert result is not None
+        assert 0 < result < 1
+
+    def test_missing_fields(self) -> None:
+        fd = FinancialData(revenue=1000)
+        assert gross_margin(fd) is None
+
+    def test_zero_revenue(self) -> None:
+        fd = FinancialData(gross_profit=100, revenue=0)
+        assert gross_margin(fd) is None
+
+
+class TestOperatingMargin:
+    def test_basic(self, toyota_financials: FinancialData) -> None:
+        result = operating_margin(toyota_financials)
+        assert result is not None
+        assert 0 < result < 1
+
+    def test_missing_fields(self) -> None:
+        fd = FinancialData(revenue=1000)
+        assert operating_margin(fd) is None
+
+
+class TestNetMargin:
+    def test_basic(self, toyota_financials: FinancialData) -> None:
+        result = net_margin(toyota_financials)
+        assert result is not None
+        assert 0 < result < 1
+
+    def test_negative(self) -> None:
+        fd = FinancialData(net_income=-50, revenue=1000)
+        result = net_margin(fd)
+        assert result is not None
+        assert result < 0
+
+
+class TestDebtToEquity:
+    def test_basic(self, toyota_financials: FinancialData) -> None:
+        result = debt_to_equity(toyota_financials)
+        assert result is not None
+        assert result > 0
+
+    def test_missing_fields(self) -> None:
+        fd = FinancialData(total_liabilities=100)
+        assert debt_to_equity(fd) is None
+
+    def test_zero_equity(self) -> None:
+        fd = FinancialData(total_liabilities=100, total_equity=0)
+        assert debt_to_equity(fd) is None
+
+
+class TestCurrentRatio:
+    def test_basic(self, toyota_financials: FinancialData) -> None:
+        result = current_ratio(toyota_financials)
+        assert result is not None
+        assert result > 0
+
+    def test_missing_fields(self) -> None:
+        fd = FinancialData(current_assets=100)
+        assert current_ratio(fd) is None
+
+    def test_healthy(self) -> None:
+        fd = FinancialData(current_assets=200, current_liabilities=100)
+        result = current_ratio(fd)
+        assert result is not None
+        assert result == 2.0

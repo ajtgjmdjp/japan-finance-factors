@@ -16,6 +16,7 @@ class FactorCategory(str, Enum):
     MOMENTUM = "momentum"
     QUALITY = "quality"
     RISK = "risk"
+    SIZE = "size"
 
 
 class MonetaryUnit(str, Enum):
