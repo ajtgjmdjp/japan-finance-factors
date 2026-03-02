@@ -1,6 +1,6 @@
 """Quantitative factor calculation for Japanese equities with PIT safety."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from japan_finance_factors._models import (
     FactorCategory,

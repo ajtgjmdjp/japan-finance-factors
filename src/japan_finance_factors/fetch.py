@@ -136,7 +136,7 @@ async def fetch_price_data(
             "stockprice-mcp is required: pip install japan-finance-factors[stockprice]"
         )
 
-    from yfinance_mcp import YfinanceClient
+    from yfinance_mcp.client import YfinanceClient
 
     end = as_of or datetime.now()
     start = end - timedelta(days=lookback_days)

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "japan-finance-factors"
-version = "0.1.0"
+version = "0.1.1"
 description = "Quantitative factor calculation for Japanese equities with PIT safety"
 readme = "README.md"
 license = "Apache-2.0"
