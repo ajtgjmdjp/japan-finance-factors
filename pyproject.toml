@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "japan-finance-factors"
+version = "0.1.0"
+description = "Quantitative factor calculation for Japanese equities with PIT safety"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "ajtgjmdjp" }]
+keywords = [
+    "japan",
+    "finance",
+    "quant",
+    "factor",
+    "backtesting",
+    "EDINET",
+    "point-in-time",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Typing :: Typed",
+]
+dependencies = ["pydantic>=2.0"]
+
+[project.optional-dependencies]
+edinet = ["edinet-mcp>=0.6.0"]
+stockprice = ["stockprice-mcp>=0.1.0"]
+all = ["japan-finance-factors[edinet,stockprice]"]
+dev = [
+    "japan-finance-factors[all]",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8",
+    "mypy>=1.13",
+]
+
+[project.urls]
+Homepage = "https://github.com/ajtgjmdjp/japan-finance-factors"
+Repository = "https://github.com/ajtgjmdjp/japan-finance-factors"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 99
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: requires live API access"]
