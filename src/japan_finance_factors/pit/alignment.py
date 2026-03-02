@@ -23,6 +23,10 @@ def is_available(published_at: datetime | None, as_of: datetime) -> bool:
 def filter_prices(price_data: PriceData, as_of: datetime) -> PriceData:
     """Filter price data to only include entries up to as_of date.
 
+    Comparison is date-level (day granularity). Prices on the same
+    calendar date as ``as_of`` are included. This is appropriate for
+    daily OHLCV data where the close price is known at end-of-day.
+
     Returns a new PriceData with prices trimmed to the cutoff.
     """
     cutoff = as_of.date() if isinstance(as_of, datetime) else as_of
@@ -31,10 +35,13 @@ def filter_prices(price_data: PriceData, as_of: datetime) -> PriceData:
         d = p.get("date")
         if d is None:
             continue
-        if isinstance(d, str):
-            d = date.fromisoformat(d)
-        if isinstance(d, datetime):
-            d = d.date()
+        try:
+            if isinstance(d, str):
+                d = date.fromisoformat(d)
+            if isinstance(d, datetime):
+                d = d.date()
+        except (ValueError, TypeError):
+            continue
         if d <= cutoff:
             filtered.append(p)
     return price_data.model_copy(update={"prices": filtered})

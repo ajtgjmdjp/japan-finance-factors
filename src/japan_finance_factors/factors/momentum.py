@@ -50,13 +50,9 @@ def mom_12m(price_data: PriceData) -> float | None:
     # Need at least 252 + 1 data points
     if len(closes) < _TRADING_DAYS_12M + 1:
         return None
-    # Skip the most recent month (21 days)
-    end_idx = len(closes) - _TRADING_DAYS_1M
-    start_idx = end_idx - (_TRADING_DAYS_12M - _TRADING_DAYS_1M)
-    if start_idx < 0:
-        return None
-    past = closes[start_idx]
-    current = closes[end_idx - 1]
+    # 12-1 convention: return from t-252 to t-21 (skip most recent month)
+    past = closes[-(_TRADING_DAYS_12M + 1)]
+    current = closes[-(_TRADING_DAYS_1M + 1)]
     if past == 0:
         return None
     return (current - past) / past

@@ -50,10 +50,10 @@ def piotroski_f_score(fd: FinancialData) -> float | None:
 
     # --- Leverage / Liquidity (3 signals) ---
 
-    # F5: Decrease in leverage (long-term debt / avg assets)
+    # F5: Decrease in leverage (long-term debt / total assets)
     if fd.long_term_debt is not None and fd.long_term_debt_prev is not None:
-        if avg_assets > 0 and fd.total_assets_prev is not None and fd.total_assets_prev > 0:
-            curr_leverage = fd.long_term_debt / avg_assets
+        if fd.total_assets > 0 and fd.total_assets_prev is not None and fd.total_assets_prev > 0:
+            curr_leverage = fd.long_term_debt / fd.total_assets
             prev_leverage = fd.long_term_debt_prev / fd.total_assets_prev
             if curr_leverage < prev_leverage:
                 score += 1
@@ -98,15 +98,16 @@ def piotroski_f_score(fd: FinancialData) -> float | None:
         if curr_margin > prev_margin:
             score += 1
 
-    # F9: Increase in asset turnover
+    # F9: Increase in asset turnover (revenue / total_assets for each period)
     if (
         fd.revenue is not None
         and fd.revenue_prev is not None
+        and fd.total_assets is not None
+        and fd.total_assets > 0
         and fd.total_assets_prev is not None
-        and avg_assets > 0
         and fd.total_assets_prev > 0
     ):
-        curr_turnover = fd.revenue / avg_assets
+        curr_turnover = fd.revenue / fd.total_assets
         prev_turnover = fd.revenue_prev / fd.total_assets_prev
         if curr_turnover > prev_turnover:
             score += 1
