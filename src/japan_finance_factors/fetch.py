@@ -53,19 +53,15 @@ async def fetch_financial_data(
         Call ``.normalized()`` to convert to JPY.
     """
     if not _is_edinet_available():
-        raise ImportError(
-            "edinet-mcp is required: pip install japan-finance-factors[edinet]"
-        )
+        raise ImportError("edinet-mcp is required: pip install japan-finance-factors[edinet]")
 
     from edinet_mcp import EdinetClient, calculate_metrics
 
     async with EdinetClient() as client:
-        stmt = await client.get_financial_statements(
-            edinet_code, doc_type=doc_type, period=period
-        )
+        stmt = await client.get_financial_statements(edinet_code, doc_type=doc_type, period=period)
 
     metrics = calculate_metrics(stmt)
-    raw: dict[str, Any] = metrics.get("raw_values", {})
+    raw: dict[str, Any] = dict(metrics.get("raw_values", {}))
 
     # Extract values from raw_values (千円 units)
     def _get(key: str) -> float | None:
@@ -159,14 +155,16 @@ async def fetch_price_data(
     prices: list[dict[str, Any]] = []
     if hist is not None:
         for row in hist.rows:
-            prices.append({
-                "date": row.get("date", ""),
-                "open": row.get("open"),
-                "high": row.get("high"),
-                "low": row.get("low"),
-                "close": row.get("close"),
-                "volume": row.get("volume"),
-            })
+            prices.append(
+                {
+                    "date": row.get("date", ""),
+                    "open": row.get("open"),
+                    "high": row.get("high"),
+                    "low": row.get("low"),
+                    "close": row.get("close"),
+                    "volume": row.get("volume"),
+                }
+            )
 
     market_cap = None
     if latest is not None and latest.market_cap is not None:
@@ -215,9 +213,7 @@ def fetch_financial_data_sync(
     doc_type: str = "annual_report",
 ) -> FinancialData:
     """Synchronous wrapper for ``fetch_financial_data``."""
-    return asyncio.run(
-        fetch_financial_data(edinet_code, period=period, doc_type=doc_type)
-    )
+    return asyncio.run(fetch_financial_data(edinet_code, period=period, doc_type=doc_type))
 
 
 def fetch_price_data_sync(
@@ -227,6 +223,4 @@ def fetch_price_data_sync(
     as_of: datetime | None = None,
 ) -> PriceData:
     """Synchronous wrapper for ``fetch_price_data``."""
-    return asyncio.run(
-        fetch_price_data(ticker, lookback_days=lookback_days, as_of=as_of)
-    )
+    return asyncio.run(fetch_price_data(ticker, lookback_days=lookback_days, as_of=as_of))

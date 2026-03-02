@@ -51,12 +51,17 @@ def piotroski_f_score(fd: FinancialData) -> float | None:
     # --- Leverage / Liquidity (3 signals) ---
 
     # F5: Decrease in leverage (long-term debt / total assets)
-    if fd.long_term_debt is not None and fd.long_term_debt_prev is not None:
-        if fd.total_assets > 0 and fd.total_assets_prev is not None and fd.total_assets_prev > 0:
-            curr_leverage = fd.long_term_debt / fd.total_assets
-            prev_leverage = fd.long_term_debt_prev / fd.total_assets_prev
-            if curr_leverage < prev_leverage:
-                score += 1
+    if (
+        fd.long_term_debt is not None
+        and fd.long_term_debt_prev is not None
+        and fd.total_assets > 0
+        and fd.total_assets_prev is not None
+        and fd.total_assets_prev > 0
+    ):
+        curr_leverage = fd.long_term_debt / fd.total_assets
+        prev_leverage = fd.long_term_debt_prev / fd.total_assets_prev
+        if curr_leverage < prev_leverage:
+            score += 1
 
     # F6: Increase in current ratio
     if (
@@ -159,11 +164,7 @@ def debt_to_equity(fd: FinancialData) -> float | None:
 
 def current_ratio(fd: FinancialData) -> float | None:
     """Current Ratio = Current Assets / Current Liabilities."""
-    if (
-        fd.current_assets is None
-        or fd.current_liabilities is None
-        or fd.current_liabilities == 0
-    ):
+    if fd.current_assets is None or fd.current_liabilities is None or fd.current_liabilities == 0:
         return None
     return fd.current_assets / fd.current_liabilities
 

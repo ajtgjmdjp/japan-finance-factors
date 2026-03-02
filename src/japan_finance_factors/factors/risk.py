@@ -36,7 +36,7 @@ def realized_vol_60d(price_data: PriceData) -> float | None:
     closes = price_data.closes()
     if len(closes) < _TRADING_DAYS_60D + 1:
         return None
-    recent = closes[-(_TRADING_DAYS_60D + 1):]
+    recent = closes[-(_TRADING_DAYS_60D + 1) :]
     returns = _daily_returns(recent)
     if len(returns) < 2:
         return None

@@ -80,12 +80,14 @@ def price_series_300d() -> PriceData:
             price = base_price * 1.10 * (1 - 0.005 * (i - 200))  # drawdown
         else:
             price = base_price * 1.10 * 0.80 * (1 + 0.002 * (i - 240))  # recovery
-        prices.append({
-            "date": d.isoformat(),
-            "close": round(price, 1),
-            "open": round(price * 0.999, 1),
-            "high": round(price * 1.002, 1),
-            "low": round(price * 0.998, 1),
-            "volume": 1000000,
-        })
+        prices.append(
+            {
+                "date": d.isoformat(),
+                "close": round(price, 1),
+                "open": round(price * 0.999, 1),
+                "high": round(price * 1.002, 1),
+                "low": round(price * 0.998, 1),
+                "volume": 1000000,
+            }
+        )
     return PriceData(ticker="7203", prices=prices, market_cap=50_000_000_000_000)

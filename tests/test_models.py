@@ -119,7 +119,9 @@ class TestPriceData:
         )
         assert pd.closes() == [100.0, 102.0, 103.0]
         assert pd.dates() == [
-            date(2025, 1, 1), date(2025, 1, 2), date(2025, 1, 3),
+            date(2025, 1, 1),
+            date(2025, 1, 2),
+            date(2025, 1, 3),
         ]
 
 

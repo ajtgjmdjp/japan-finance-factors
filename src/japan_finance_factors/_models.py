@@ -134,20 +134,43 @@ class FinancialData(BaseModel):
     # Fields that represent monetary amounts in statement units (千円 or 円).
     # shares_outstanding and market_cap are NOT monetary — they come from
     # market data and are always in raw units (shares / JPY respectively).
-    _MONETARY_FIELDS: frozenset[str] = frozenset({
-        "revenue", "cost_of_sales", "gross_profit", "operating_income",
-        "ordinary_income", "net_income", "depreciation", "interest_expense",
-        "total_assets", "total_assets_prev", "current_assets",
-        "cash_and_deposits", "receivables", "inventories",
-        "total_liabilities", "current_liabilities", "short_term_debt",
-        "long_term_debt", "total_equity", "total_equity_prev",
-        "retained_earnings", "retained_earnings_prev",
-        "operating_cf", "investing_cf", "capex",
-        "revenue_prev", "gross_profit_prev", "operating_income_prev",
-        "net_income_prev", "operating_cf_prev",
-        "current_assets_prev", "current_liabilities_prev",
-        "long_term_debt_prev",
-    })
+    _MONETARY_FIELDS: frozenset[str] = frozenset(
+        {
+            "revenue",
+            "cost_of_sales",
+            "gross_profit",
+            "operating_income",
+            "ordinary_income",
+            "net_income",
+            "depreciation",
+            "interest_expense",
+            "total_assets",
+            "total_assets_prev",
+            "current_assets",
+            "cash_and_deposits",
+            "receivables",
+            "inventories",
+            "total_liabilities",
+            "current_liabilities",
+            "short_term_debt",
+            "long_term_debt",
+            "total_equity",
+            "total_equity_prev",
+            "retained_earnings",
+            "retained_earnings_prev",
+            "operating_cf",
+            "investing_cf",
+            "capex",
+            "revenue_prev",
+            "gross_profit_prev",
+            "operating_income_prev",
+            "net_income_prev",
+            "operating_cf_prev",
+            "current_assets_prev",
+            "current_liabilities_prev",
+            "long_term_debt_prev",
+        }
+    )
 
     def normalized(self) -> FinancialData:
         """Return a copy with all monetary values converted to JPY.
@@ -181,6 +204,7 @@ class PriceData(BaseModel):
 
     def _sorted_prices(self) -> list[dict[str, Any]]:
         """Return prices sorted by date ascending."""
+
         def _parse_date(p: dict[str, Any]) -> date:
             d = p.get("date")
             if isinstance(d, date) and not isinstance(d, datetime):
@@ -190,15 +214,12 @@ class PriceData(BaseModel):
             if isinstance(d, str):
                 return date.fromisoformat(d)
             return date.min
+
         return sorted(self.prices, key=_parse_date)
 
     def closes(self) -> list[float]:
         """Extract close prices sorted by date ascending."""
-        return [
-            float(p["close"])
-            for p in self._sorted_prices()
-            if p.get("close") is not None
-        ]
+        return [float(p["close"]) for p in self._sorted_prices() if p.get("close") is not None]
 
     def dates(self) -> list[date]:
         """Extract dates sorted ascending."""

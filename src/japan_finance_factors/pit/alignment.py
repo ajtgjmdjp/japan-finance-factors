@@ -64,9 +64,7 @@ def select_financial_data(
     From a list of financial data snapshots, returns the one with the
     latest period_end that was published before as_of.
     """
-    available = [
-        fd for fd in candidates if is_available(fd.published_at, as_of)
-    ]
+    available = [fd for fd in candidates if is_available(fd.published_at, as_of)]
     if not available:
         return None
     # Prefer the most recent period; break ties by latest publication
