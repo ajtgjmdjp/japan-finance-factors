@@ -1,5 +1,8 @@
 # japan-finance-factors
 
+> **Status: Maintenance mode** — This project is stable and functional but not actively developed. Issues and PRs are welcome.
+
+
 Quantitative factor calculation for Japanese equities with point-in-time (PIT) safety.
 
 ## Features
